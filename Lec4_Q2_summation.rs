@@ -9,7 +9,7 @@ fn checked_addition(x:&[u32]) -> Option<u32> {
     }else {
         Some(sum)
     }
-}// end of fn another_function
+}// end of fn checked_addition
 
 
 fn main() {
