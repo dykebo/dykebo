@@ -1,0 +1,126 @@
+第1题 交通信号灯，需要一个enum类型定义信号灯，然后通过一个trait为这个枚举类型实现方法，
+方法内部逻辑是根据枚举类型的变体返回不同的数值；
+案例参考：
+#[derive(Debug)]
+enum TrafficLight{
+    RED,
+    GREEN,
+    YELLOW,
+}
+
+trait Delay{
+    fn delay_time(&self) -> u32;
+}
+
+impl Delay for TrafficLight{
+    fn delay_time(&self) -> u32{
+        match self {
+            TrafficLight::RED=>22,
+            TrafficLight::GREEN=>20,
+            TrafficLight::YELLOW=>2,
+        }
+    }
+}
+
+fn main() {
+    let light_1=TrafficLight::RED;
+    let light_2=TrafficLight::GREEN;
+    let light_3=TrafficLight::YELLOW;
+    println!("{:#?},{:#?}",light_1,light_1.delay_time());
+    println!("{:#?},{:#?}",light_2,light_2.delay_time());
+    println!("{:#?},{:#?}",light_3,light_3.delay_time());
+}
+第2题考虑溢出情况进行整数求和，如果对标准库熟悉的话，可以只用数值类型的check_add()或者overflowing_add()方法实现，
+功能大概需要5到6行， 如果了解迭代器的try_fold()方法，你会发现标准库文档有一样的例子，只需要1到2行。 
+案例参考：
+fn main() {
+    let a = [10, 20, 30, 100, 40, 50, i32::MAX];
+    println!("{:#?}",try_sum(&a));
+    
+    let a = [10, 20, 30, 100, 40, 50, 500];
+    println!("{:#?}",try_sum(&a));
+}
+
+fn try_sum(a: &[i32]) -> Option<i32> {
+    let mut it = a.iter();
+    let sum = it.try_fold(0i32, |acc, &x| acc.checked_add(x));
+    sum
+}
+第3小题考查的知识点主要是泛型和泛型约束，泛型约束的语法类似于：T: Trait1 + Trait2;
+案例参考：
+use std::f64::consts::PI;
+
+#[derive(Debug)]
+pub struct Circle<T>{
+    pub r:T
+}
+
+#[derive(Debug)]
+pub struct Triangle<T,U,V>{
+    pub a:T,
+    pub b:U,
+    pub c:V,
+}
+
+#[derive(Debug)]
+pub struct Square<T>{
+    pub a:T,
+}
+
+pub trait AreaCalculate{
+    fn area(&self) -> f64;
+}
+
+impl<T> AreaCalculate for Circle<T>
+    where T: Copy + Into<f64> {
+    fn area(&self) -> f64 {
+        let r:f64=self.r.into();
+        PI * r * r
+    }
+}
+
+impl<T> AreaCalculate for Square<T>
+    where T: Copy + Into<f64> {
+    fn area(&self) -> f64 {
+        let a:f64 = self.a.into();
+        a * a
+    }
+}
+
+
+impl<T,U,V> AreaCalculate for Triangle<T,U,V>
+    where T:Copy + Into<f64>, U:Copy + Into<f64>, V:Copy + Into<f64>{
+    fn area(&self) -> f64 {
+        let a:f64=self.a.into();
+        let b:f64=self.b.into();
+        let c:f64=self.c.into();
+        let p=(a+b+c)/2.0;
+
+        (p*(p-a)*(p-b)*(p-c)).sqrt()
+    }
+}
+
+pub fn area<T: AreaCalculate>(shape: &T) -> f64{
+    shape.area()
+}
+
+
+fn main() {
+
+    let circle=Circle{
+        r:10u8
+    };
+    println!("{:#?} \n area {}\n",circle,area(&circle));
+
+    let triangle=Triangle{
+        a:3u32,
+        b:4.0f32,
+        c:5.00000000000001f64,
+    };
+    println!("{:#?} \n area {}\n",triangle,area(&triangle));
+
+    let square=Square{
+        a:10u32,
+    };
+    println!("{:#?} \n area {}\n",square,area(&square));
+}
