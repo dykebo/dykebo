@@ -1,0 +1,13 @@
+大家好，今天为大家点评下第六课作业
+以下是参考答案，欢迎讨论
+
+1. Polkadot-JS App网址 https://polkadot.js.org/apps
+2. Polkadot-JS App 和 Polkadot-JS API 的区别是什么 A，C,  D
+3. 你可以在 Polkadot-JS App 内做什么操作  A、B、C、E
+4. 以下哪些生产环境的网络 (LIVE NETWORK) 是 Polkadot-JS App 里默认有支持的？ A，C，D，E
+Kusama Kulupu Centrifuge ChainX
+5. 如果在 Substrate 端加了自定义类型，我们在 Polkadot-JS App 里需要作什么才能支持连到这个 Substrate 节点 C 在 Setting 里, Developer tab 里，加自定义的 JSON 对象
+6. 在 Polkadot-JS API 里，数字默认是用哪个类型代表 C bn.js
+7. 我要查询 Substrate 链上的存储变量,并订阅它的变更，应该用以下哪个方法 B  const unsub = await api.query..(value => {...})
+8. 我要对 Substrate 链上发出一次交易，但 **不需要** 订阅交易处理状态，应该用以下哪个方法 D  api.tx..().signAndSend()
+9. 现在在 Github 上的 Substrate repo 约有多少用户给它打了星 D 5000
